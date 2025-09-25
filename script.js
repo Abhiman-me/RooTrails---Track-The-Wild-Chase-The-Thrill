@@ -19,6 +19,304 @@ let isLoading = true
 const lerp = (start, end, factor) => start + (end - start) * factor
 const map = (value, start1, stop1, start2, stop2) => start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
 
+class MobileNavigation {
+  constructor() {
+    this.mobileMenuBtn = document.getElementById("mobile-menu-btn")
+    this.navLinks = document.getElementById("nav-links")
+    this.navLinksItems = document.querySelectorAll(".nav-link")
+    this.isOpen = false
+
+    this.init()
+  }
+
+  init() {
+    if (!this.mobileMenuBtn || !this.navLinks) return
+
+    this.mobileMenuBtn.addEventListener("click", () => {
+      this.toggleMenu()
+    })
+
+    // Close menu when clicking on nav links
+    this.navLinksItems.forEach((link) => {
+      link.addEventListener("click", () => {
+        this.closeMenu()
+      })
+    })
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      if (this.isOpen && !this.navLinks.contains(e.target) && !this.mobileMenuBtn.contains(e.target)) {
+        this.closeMenu()
+      }
+    })
+
+    // Handle escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && this.isOpen) {
+        this.closeMenu()
+      }
+    })
+  }
+
+  toggleMenu() {
+    if (this.isOpen) {
+      this.closeMenu()
+    } else {
+      this.openMenu()
+    }
+  }
+
+  openMenu() {
+    this.isOpen = true
+    this.mobileMenuBtn.classList.add("active")
+    this.navLinks.classList.add("active")
+    document.body.style.overflow = "hidden"
+  }
+
+  closeMenu() {
+    this.isOpen = false
+    this.mobileMenuBtn.classList.remove("active")
+    this.navLinks.classList.remove("active")
+    document.body.style.overflow = "auto"
+  }
+}
+
+class ResponsiveParticleSystem {
+  constructor() {
+    this.container = document.getElementById("particles-container")
+    this.particles = []
+    this.particleCount = this.getParticleCount()
+    this.isTouch = "ontouchstart" in window
+
+    this.init()
+  }
+
+  getParticleCount() {
+    const width = window.innerWidth
+    if (width < 480) return 15
+    if (width < 768) return 25
+    if (width < 1024) return 35
+    return 50
+  }
+
+  init() {
+    // Disable particles on touch devices for better performance
+    if (this.isTouch && window.innerWidth < 768) {
+      return
+    }
+
+    for (let i = 0; i < this.particleCount; i++) {
+      this.createParticle()
+    }
+
+    this.animate()
+
+    // Handle resize
+    window.addEventListener("resize", () => {
+      const newCount = this.getParticleCount()
+      if (newCount !== this.particleCount) {
+        this.updateParticleCount(newCount)
+      }
+    })
+  }
+
+  updateParticleCount(newCount) {
+    const diff = newCount - this.particleCount
+
+    if (diff > 0) {
+      // Add particles
+      for (let i = 0; i < diff; i++) {
+        this.createParticle()
+      }
+    } else if (diff < 0) {
+      // Remove particles
+      for (let i = 0; i < Math.abs(diff); i++) {
+        const particle = this.particles.pop()
+        if (particle) {
+          particle.remove()
+        }
+      }
+    }
+
+    this.particleCount = newCount
+  }
+
+  createParticle() {
+    const particle = document.createElement("div")
+    particle.className = "particle"
+
+    // Random initial position
+    const x = Math.random() * window.innerWidth
+    const y = Math.random() * window.innerHeight
+
+    particle.style.left = x + "px"
+    particle.style.top = y + "px"
+
+    // Random properties
+    const speed = Math.random() * 2 + 0.5
+    const angle = Math.random() * Math.PI * 2
+    const life = Math.random() * 3 + 2
+
+    particle.velocity = {
+      x: Math.cos(angle) * speed,
+      y: Math.sin(angle) * speed,
+    }
+
+    particle.life = life
+    particle.maxLife = life
+
+    this.container.appendChild(particle)
+    this.particles.push(particle)
+
+    // Animate particle appearance
+    gsap.to(particle, {
+      opacity: Math.random() * 0.6 + 0.2,
+      duration: 1,
+      ease: "power2.out",
+    })
+  }
+
+  animate() {
+    this.particles.forEach((particle, index) => {
+      // Update position
+      const currentX = Number.parseFloat(particle.style.left)
+      const currentY = Number.parseFloat(particle.style.top)
+
+      particle.style.left = currentX + particle.velocity.x + "px"
+      particle.style.top = currentY + particle.velocity.y + "px"
+
+      // Update life
+      particle.life -= 0.016
+
+      // Update opacity based on life
+      const opacity = particle.life / particle.maxLife
+      particle.style.opacity = opacity * 0.6
+
+      // Remove and recreate if dead or out of bounds
+      if (
+        particle.life <= 0 ||
+        currentX < -10 ||
+        currentX > window.innerWidth + 10 ||
+        currentY < -10 ||
+        currentY > window.innerHeight + 10
+      ) {
+        particle.remove()
+        this.particles.splice(index, 1)
+        this.createParticle()
+      }
+    })
+
+    requestAnimationFrame(() => this.animate())
+  }
+}
+
+class ResponsiveCustomCursor {
+  constructor() {
+    this.cursor = document.getElementById("cursor")
+    this.dot = document.querySelector(".cursor-dot")
+    this.outline = document.querySelector(".cursor-outline")
+    this.isTouch = "ontouchstart" in window
+
+    if (!this.cursor || this.isTouch || window.innerWidth < 768) {
+      if (this.cursor) this.cursor.style.display = "none"
+      return
+    }
+
+    this.mouse = { x: 0, y: 0 }
+    this.cursor.pos = { x: 0, y: 0 }
+    this.cursor.speed = 0.2
+
+    this.init()
+  }
+
+  init() {
+    document.addEventListener("mousemove", (e) => {
+      this.mouse.x = e.clientX
+      this.mouse.y = e.clientY
+    })
+
+    // Hover effects for interactive elements
+    document.addEventListener(
+      "mouseenter",
+      (e) => {
+        if (e.target.matches("a, button, .magnetic, input, textarea")) {
+          this.cursor.classList.add("hover")
+        }
+      },
+      true,
+    )
+
+    document.addEventListener(
+      "mouseleave",
+      (e) => {
+        if (e.target.matches("a, button, .magnetic, input, textarea")) {
+          this.cursor.classList.remove("hover")
+        }
+      },
+      true,
+    )
+
+    this.updateCursor()
+  }
+
+  updateCursor() {
+    this.cursor.pos.x = lerp(this.cursor.pos.x, this.mouse.x, this.cursor.speed)
+    this.cursor.pos.y = lerp(this.cursor.pos.y, this.mouse.y, this.cursor.speed)
+
+    this.cursor.style.transform = `translate(${this.cursor.pos.x}px, ${this.cursor.pos.y}px)`
+
+    requestAnimationFrame(() => this.updateCursor())
+  }
+}
+
+class ResponsiveMagneticElements {
+  constructor() {
+    this.elements = document.querySelectorAll(".magnetic")
+    this.isTouch = "ontouchstart" in window
+    this.init()
+  }
+
+  init() {
+    // Disable magnetic effects on touch devices
+    if (this.isTouch) {
+      return
+    }
+
+    this.elements.forEach((element) => {
+      const strength = Number.parseFloat(element.dataset.magnetic) || 0.3
+
+      element.addEventListener("mousemove", (e) => {
+        this.applyMagneticEffect(element, e, strength)
+      })
+
+      element.addEventListener("mouseleave", () => {
+        gsap.to(element, {
+          x: 0,
+          y: 0,
+          duration: 1.2,
+          ease: "elastic.out(1, 0.3)",
+        })
+      })
+    })
+  }
+
+  applyMagneticEffect(element, e, strength) {
+    const rect = element.getBoundingClientRect()
+    const centerX = rect.left + rect.width / 2
+    const centerY = rect.top + rect.height / 2
+
+    const deltaX = (e.clientX - centerX) * strength
+    const deltaY = (e.clientY - centerY) * strength
+
+    gsap.to(element, {
+      x: deltaX,
+      y: deltaY,
+      duration: 0.3,
+      ease: "power2.out",
+    })
+  }
+}
+
 // Loading Animation
 class LoadingScreen {
   constructor() {
@@ -166,14 +464,15 @@ class LoadingScreen {
   initMainAnimations() {
     console.log("[v0] Initializing main animations after loading screen")
 
-    // Initialize all main components after loading
-    customCursor = new CustomCursor()
-    magneticElements = new MagneticElements()
+    // Initialize responsive components
+    customCursor = new ResponsiveCustomCursor()
+    magneticElements = new ResponsiveMagneticElements()
     waterEffect = new WaterDistortionEffect()
 
     new ScrollAnimations()
-    new ParticleSystem()
+    new ResponsiveParticleSystem()
     new NavigationController()
+    new MobileNavigation()
     new FormHandler()
     new ScrollProgressBar()
 
