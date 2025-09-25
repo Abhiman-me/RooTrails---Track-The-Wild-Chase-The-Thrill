@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RooTrails - Track the WILD , Chase The Thrill</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/TextPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/MorphSVGPlugin.min.js"></script>
+</head>
+
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader">
+            <!-- Coordinates Display -->
+            <div class="coordinates-container">
+                <div class="coordinate-line">
+                    <span class="coord-label">ORIGIN:</span>
+                    <span class="coord-value glitch-text" data-text="33.3872° N, 104.5281° W">33.3872° N, 104.5281°
+                        W</span>
+                </div>
+                <div class="coordinate-line">
+                    <span class="coord-label">DESTINATION:</span>
+                    <span class="coord-value glitch-text" data-text="48.8566° N, 2.3522° E">48.8566° N, 2.3522° E</span>
+                </div>
+                <div class="coordinate-line">
+                    <span class="coord-label">STATUS:</span>
+                    <span class="coord-value status-text">ESTABLISHING CONNECTION...</span>
+                </div>
+            </div>
+
+            <!-- Main Loading Text -->
+            <div class="loader-text">
+                <span class="loading-char">T</span>
+                <span class="loading-char">E</span>
+                <span class="loading-char">A</span>
+                <span class="loading-char">M</span>
+
+                <span class="loading-char">&nbsp;</span>
+                <span class="loading-char">P</span>
+                <span class="loading-char">A</span>
+                <span class="loading-char">N</span>
+                <span class="loading-char">T</span>
+                <span class="loading-char">H</span>
+                <span class="loading-char">E</span>
+                <span class="loading-char">R</span>
+                <span class="loading-char">A</span>
+            </div>
+
+            <!-- Transmission Effect -->
+            <div class="transmission-container">
+                <div class="transmission-line">
+                    <span class="transmission-text">DECRYPTING SIGNAL...</span>
+                    <div class="signal-bars">
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                    </div>
+                </div>
+                <div class="data-stream">
+                    <span class="stream-text">01001000 01100101 01101100 01101100 01101111</span>
+                </div>
+            </div>
+
+            <!-- Enhanced Progress Bar -->
+            <div class="loader-progress">
+                <div class="progress-label">LOADING CLASSIFIED DATA</div>
+                <div class="loader-bar"></div>
+                <div class="progress-percentage">0%</div>
+            </div>
+
+            <!-- Scanning Effect -->
+            <div class="scanner-line"></div>
+
+            <!-- Static Overlay -->
+            <div class="static-overlay"></div>
+        </div>
+    </div>
+
+    <!-- WebGL canvas for distortion effect -->
+    <canvas id="distortion-canvas"></canvas>
+
+    <!-- Particle System -->
+    <div id="particles-container"></div>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-outline"></div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="scroll-progress">
+        <div class="progress-bar"></div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navigation">
+        <div class="nav-container">
+            <div class="nav-logo magnetic" data-magnetic="0.3">
+                <span class="logo-text">Team PANTHERA</span>
+            </div>
+            <div class="nav-links">
+                <a href="#home" class="magnetic nav-link" data-magnetic="0.2">Home</a>
+                <a href="#about" class="magnetic nav-link" data-magnetic="0.2">About</a>
+                <a href="#team" class="magnetic nav-link" data-magnetic="0.2">Team</a>
+                <a href="#portfolio" class="magnetic nav-link" data-magnetic="0.2">Portfolio</a>
+                <a href="#contact" class="magnetic nav-link" data-magnetic="0.2">Contact</a>
+                <a href="#download" class="magnetic nav-link" data-magnetic="0.2">Download</a>
+            </div>
+        </div>
+    </nav>
+    <img src="Leopard.png" alt="Leopard.png" class="leopard">
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero-section">
+            <!-- Background Elements -->
+            <div class="hero-bg">
+                <div class="gradient-orb gradient-orb-1"></div>
+                <div class="gradient-orb gradient-orb-2"></div>
+                <div class="gradient-orb gradient-orb-3"></div>
+            </div>
+
+            <div class="floating-elements">
+                <div class="floating-element" data-speed="2" style="width: 80px; height: 80px; top: 80px; left: 80px;">
+                </div>
+                <div class="floating-element" data-speed="1.5"
+                    style="width: 48px; height: 48px; top: 160px; right: 128px;"></div>
+                <div class="floating-element" data-speed="2.5"
+                    style="width: 64px; height: 64px; bottom: 128px; left: 160px;"></div>
+                <div class="floating-element" data-speed="1.8"
+                    style="width: 32px; height: 32px; top: 50%; right: 200px;"></div>
+                <div class="floating-element" data-speed="2.2"
+                    style="width: 56px; height: 56px; bottom: 200px; right: 300px;"></div>
+            </div>
+
+            <div class="hero-content">
+                <div class="magnetic hero-title-container" data-magnetic="0.15">
+                    <h1 class="hero-text">
+                        <div class="hero-word">
+                            <span class="hero-char">
+                                <p class="name-clr1">R</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr1">O</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr1">O</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr2">T</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr3">R</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr3">A</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr3">I</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr3">L</p>
+                            </span>
+                            <span class="hero-char">
+                                <p class="name-clr3">S</p>
+                            </span>
+                            <span class="hero-char">
+                                <p>.</p>
+                            </span>
+                        </div>
+                    </h1>
+                </div>
+                <div class="hero-bottom">
+                    <link href="https://fonts.googleapis.com/css2?family=Mansalva&display=swap" rel="stylesheet">
+                    <h2 class="phrase">“Track the Wild, Chase the Thrill”</h2>
+                    <div class="hero-description">
+                        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+                        <h3 class="hero-desc-title">What is RooTrails?</h3>
+                        <p class="hero-desc-text">Rootrails is where technology meets the wild. We track animals to create smarter, safer safaris — giving travelers unforgettable encounters while protecting Sri Lanka’s natural heritage.</p>
+                        <button class="magnetic glass-card cta-button" data-magnetic="0.15">
+                            <span class="btn-text">VIEW PROJECT</span>
+                            <span class="btn-arrow">→</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Scroll Indicator -->
+            <div class="scroll-indicator">
+                <div class="scroll-mouse">
+                    <div class="scroll-wheel"></div>
+                </div>
+                <span class="scroll-text">Scroll to explore</span>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="about-section">
+            <div class="container">
+                <div class="about-content">
+                    <div class="section-header">
+                        <h2 class="section-title reveal-text">
+                            <span class="title-line">Our Mission</span>
+                        </h2>
+                    </div>
+                    <div class="about-grid">
+                        <div class="about-text-container">
+                            <p class="about-text reveal-text">
+                                With RootRails, safaris in Sri Lanka become smarter and more meaningful.
+                                 Our animal tracking technology helps travelers experience wildlife in its natural habitat while ensuring safety and supporting conservation.
+                                  It’s about turning every journey into an authentic adventure that also protects the wilderness.
+                            </p>
+                            <p class="about-text reveal-text">
+                                RootRails also makes tourism transparent and scam-free.
+                                 Business owners can list their services directly on the app,
+                                  so travelers connect with verified experiences without middlemen or hidden costs. This creates a trustworthy platform where visitors explore with confidence,
+                                 and local businesses grow fairly.
+                            </p>
+                        </div>
+                        <div class="about-stats">
+                            <div class="stat-item reveal-up">
+                                <div class="stat-number" data-count="150">0</div>
+                                <div class="stat-label">Local Businesses</div>
+                            </div>
+                            <div class="stat-item reveal-up">
+                                <div class="stat-number" data-count="10">0</div>
+                                <div class="stat-label">Tourist DESTINATION</div>
+                            </div>
+                            <div class="stat-item reveal-up">
+                                <div class="stat-number" data-count="1000">0</div>
+                                <div class="stat-label">Animal Sightings</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team" class="team-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title reveal-text">
+                        <span class="title-line">Meet Our Team</span>
+                    </h2>
+                </div>
+                <div class="team-intro reveal-text">
+                    <p class="team-description">
+                        Behind RooTrails is a passionate team of wildlife enthusiasts, tech innovators, and conservation advocates. 
+                        We're united by our mission to revolutionize wildlife tourism in Sri Lanka while protecting the natural heritage we all love.
+                    </p>
+                </div>
+                <div class="team-grid">
+                    <div class="team-member magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="member-image">
+                            <img src="/placeholder.svg?height=300&width=300" alt="Team Lead" />
+                            <div class="member-overlay">
+                                <div class="member-social">
+                                    <a href="#" class="social-link">LinkedIn</a>
+                                    <a href="#" class="social-link">Twitter</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Hirusha Reshan</h3>
+                            <p class="member-role">Team Leader</p>
+                            <p class="member-bio">Ui/Ux Designer , FrontEnd & Back End Developer</p>
+                        </div>
+                    </div>
+                    <div class="team-member magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="member-image">
+                            <img src="/placeholder.svg?height=300&width=300" alt="Tech Lead" />
+                            <div class="member-overlay">
+                                <div class="member-social">
+                                    <a href="#" class="social-link">LinkedIn</a>
+                                    <a href="#" class="social-link">GitHub</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Dewshi Chamathka</h3>
+                            <p class="member-role">Team Member</p>
+                            <p class="member-bio">Ui/Ux Designer ,  Backend Developer</p>
+                        </div>
+                    </div>
+                    <div class="team-member magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="member-image">
+                            <img src="/placeholder.svg?height=300&width=300" alt="Conservation Lead" />
+                            <div class="member-overlay">
+                                <div class="member-social">
+                                    <a href="#" class="social-link">LinkedIn</a>
+                                    <a href="#" class="social-link">Research</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Aqeela Ashger Ali </h3>
+                            <p class="member-role">Team Member</p>
+                            <p class="member-bio">Ui/Ux Designer ,  Backend Developer</p>
+                        </div>
+                    </div>
+                    <div class="team-member magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="member-image">
+                            <img src="/placeholder.svg?height=300&width=300" alt="Design Lead" />
+                            <div class="member-overlay">
+                                <div class="member-social">
+                                    <a href="#" class="social-link">LinkedIn</a>
+                                    <a href="#" class="social-link">Dribbble</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Seneesa Karunathilake</h3>
+                            <p class="member-role">Team Member</p>
+                            <p class="member-bio">Ui/Ux Designer , FrontEnd & Backend Developer</p>
+                        </div>
+                    </div>
+                    <div class="team-member magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="member-image">
+                            <img src="/placeholder.svg?height=300&width=300" alt="Business Lead" />
+                            <div class="member-overlay">
+                                <div class="member-social">
+                                    <a href="#" class="social-link">LinkedIn</a>
+                                    <a href="#" class="social-link">Twitter</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="member-info">
+                            <h3 class="member-name">Abhiman Theekshana</h3>
+                            <p class="member-role">Team Member </p>
+                            <p class="member-bio">Ui/Ux Designer , FrontEnd & Backend Developer</p>
+                        </div>
+                    </div>
+                   
+                </div>
+                <div class="team-values reveal-up">
+                    <h3 class="values-title">Our Values</h3>
+                    <div class="values-grid">
+                        <div class="value-item magnetic glass-card" data-magnetic="0.03">
+                            <div class="value-icon">🌿</div>
+                            <h4 class="value-name">Conservation First</h4>
+                            <p class="value-description">Every decision we make prioritizes the protection and preservation of Sri Lanka's wildlife.</p>
+                        </div>
+                        <div class="value-item magnetic glass-card" data-magnetic="0.03">
+                            <div class="value-icon">🤝</div>
+                            <h4 class="value-name">Community Partnership</h4>
+                            <p class="value-description">We work hand-in-hand with local communities to create sustainable tourism opportunities.</p>
+                        </div>
+                        <div class="value-item magnetic glass-card" data-magnetic="0.03">
+                            <div class="value-icon">🔬</div>
+                            <h4 class="value-name">Innovation</h4>
+                            <p class="value-description">Leveraging cutting-edge technology to solve real-world conservation and tourism challenges.</p>
+                        </div>
+                        <div class="value-item magnetic glass-card" data-magnetic="0.03">
+                            <div class="value-icon">🌍</div>
+                            <h4 class="value-name">Transparency</h4>
+                            <p class="value-description">Building trust through honest, scam-free tourism experiences for all travelers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Portfolio Section -->
+        <section id="portfolio" class="portfolio-section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-number"></div>
+                    <h2 class="section-title reveal-text">
+                        <span class="title-line">Featured Work</span>
+                    </h2>
+                </div>
+                <div class="portfolio-grid">
+                    <div class="project-card magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="project-image">
+                            <img src="roo.png" alt="Modern Dashboard" />
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Smart & Simple UI</h3>
+                            <p class="project-description">RootRails makes tourism simple, clear, and just one tap away</p>
+                        </div>
+                    </div>
+                    <div class="project-card magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="project-image">
+                            <img src="busi.png" alt="Brand Identity" />
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Brand Identity</h3>
+                            <p class="project-description">“Empowering local businesses to list, grow, and earn revenue.”</p>
+                        </div>
+                    </div>
+                    <div class="project-card magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="project-image">
+                            <img src="e-commerce-in-sri-lanka.jpg" alt="E-commerce Platform" />
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">E-commerce Platform</h3>
+                            <p class="project-description">Next-generation shopping experience with AR integration</p>
+                        </div>
+                    </div>
+                    <div class="project-card magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="project-image">
+                            <img src="realtime.png" alt="Mobile App" />
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Real Time Animal Tracking</h3>
+                            <p class="project-description">Animal Tracking Usinf Crowd Funded Sources & Ai Predictions</p>
+                        </div>
+                    </div>
+                    <div class="project-card magnetic glass-card reveal-up" data-magnetic="0.05">
+                        <div class="project-image">
+                            <img src="book.png" alt="Mobile App" />
+                        </div>
+                        <div class="project-info">
+                            <h3 class="project-title">Pre Book & Plan Your Vaccation</h3>
+                            <p class="project-description">With this feature you can pre book your adventures and be prepared</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+             <!-- Download Section -->
+        <section id="download" class="download-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2 class="section-title reveal-text">
+                        <span class="title-line">Download RooTrails</span>
+                    </h2>
+                </div>
+                
+                <div class="download-hero reveal-text">
+                    <p class="download-description">
+                        Experience Sri Lanka's wildlife like never before. Download RooTrails and start your adventure today.
+                    </p>
+                </div>
+
+                <div class="download-content">
+                    <div class="download-grid">
+                        <div class="download-info reveal-up">
+                            <div class="app-preview">
+                                <div class="phone-mockup">
+                                    <img src="app.png" alt="RooTrails App Preview" class="app-screenshot" />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="download-actions reveal-up">
+                            <h3 class="download-title">Get the App</h3>
+                            <p class="download-subtitle">Available on all major platforms</p>
+                            
+                            <div class="download-buttons">
+                                <a href="#" class="magnetic download-btn ios-btn glass-card" data-magnetic="0.1">
+                                    <div class="btn-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M18.71 19.5C17.88 20.74 17 21.95 15.66 21.97C14.32 22 13.89 21.18 12.37 21.18C10.84 21.18 10.37 21.95 9.09997 22C7.78997 22.05 6.79997 20.68 5.95997 19.47C4.24997 17 2.93997 12.45 4.69997 9.39C5.56997 7.87 7.12997 6.91 8.81997 6.88C10.1 6.85 11.32 7.75 12.11 7.75C12.89 7.75 14.37 6.68 15.92 6.84C16.57 6.87 18.39 7.1 19.56 8.82C19.47 8.88 17.39 10.1 17.41 12.63C17.44 15.65 20.06 16.66 20.09 16.67C20.06 16.74 19.67 18.11 18.71 19.5ZM13 3.5C13.73 2.67 14.94 2.04 15.94 2C16.07 3.17 15.6 4.35 14.9 5.19C14.21 6.04 13.07 6.7 11.95 6.61C11.8 5.46 12.36 4.26 13 3.5Z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <div class="btn-content">
+                                        <span class="btn-label">Download on the</span>
+                                        <span class="btn-store">App Store</span>
+                                    </div>
+                                </a>
+                                
+                                <a href="#" class="magnetic download-btn android-btn glass-card" data-magnetic="0.1">
+                                    <div class="btn-icon">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                            <path d="M3.609 1.814L13.792 12L3.61 22.186C3.63 22.186 3.65 22.186 3.67 22.186C4.06 22.186 4.45 22.036 4.75 21.736L15.75 12L4.75 2.264C4.45 1.964 4.06 1.814 3.67 1.814C3.65 1.814 3.63 1.814 3.609 1.814Z" fill="currentColor"/>
+                                            <path d="M20.31 10.94L16.64 8.86L13.79 12L16.64 15.14L20.31 13.06C21.19 12.58 21.19 11.42 20.31 10.94Z" fill="currentColor"/>
+                                            <path d="M13.792 12L4.75 2.264C4.45 1.964 4.06 1.814 3.67 1.814C3.28 1.814 2.89 1.964 2.59 2.264C2.29 2.564 2.14 2.954 2.14 3.344V20.656C2.14 21.046 2.29 21.436 2.59 21.736C2.89 22.036 3.28 22.186 3.67 22.186C4.06 22.186 4.45 22.036 4.75 21.736L13.792 12Z" fill="currentColor"/>
+                                        </svg>
+                                    </div>
+                                    <div class="btn-content">
+                                        <span class="btn-label">Get it on</span>
+                                        <span class="btn-store">Google Play</span>
+                                    </div>
+                                </a>
+                            </div>
+                            
+                            <div class="app-features">
+                                <h4 class="features-title">Key Features</h4>
+                                <div class="features-list">
+                                    <div class="feature-item magnetic" data-magnetic="0.05">
+                                        <div class="feature-icon">📍</div>
+                                        <div class="feature-text">
+                                            <h5>Real-time Animal Tracking</h5>
+                                            <p>Track wildlife movements with AI-powered predictions</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item magnetic" data-magnetic="0.05">
+                                        <div class="feature-icon">🏢</div>
+                                        <div class="feature-text">
+                                            <h5>Local Business Directory</h5>
+                                            <p>Connect with verified tour operators and guides</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item magnetic" data-magnetic="0.05">
+                                        <div class="feature-icon">📅</div>
+                                        <div class="feature-text">
+                                            <h5>Smart Booking System</h5>
+                                            <p>Plan and book your wildlife adventures in advance</p>
+                                        </div>
+                                    </div>
+                                    <div class="feature-item magnetic" data-magnetic="0.05">
+                                        <div class="feature-icon">🌿</div>
+                                        <div class="feature-text">
+                                            <h5>Conservation Impact</h5>
+                                            <p>Support wildlife conservation with every booking</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="download-stats reveal-up">
+                        <div class="stats-grid">
+                            <div class="stat-card magnetic glass-card" data-magnetic="0.03">
+                                <div class="stat-number" data-count="50000">0</div>
+                                <div class="stat-label">Downloads</div>
+                            </div>
+                            <div class="stat-card magnetic glass-card" data-magnetic="0.03">
+                                <div class="stat-number" data-count="4.8">0</div>
+                                <div class="stat-label">App Store Rating</div>
+                            </div>
+                            <div class="stat-card magnetic glass-card" data-magnetic="0.03">
+                                <div class="stat-number" data-count="25">0</div>
+                                <div class="stat-label">National Parks</div>
+                            </div>
+                            <div class="stat-card magnetic glass-card" data-magnetic="0.03">
+                                <div class="stat-number" data-count="500">0</div>
+                                <div class="stat-label">Tour Operators</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="app-gallery reveal-up">
+                        <h3 class="gallery-title">App Screenshots</h3>
+                        <div class="gallery-grid">
+                            <div class="gallery-item magnetic" data-magnetic="0.05">
+                                <img src="roo.png" alt="Home Screen" class="gallery-image" />
+                                <div class="gallery-overlay">
+                                    <h4>Home Screen</h4>
+                                    <p>Discover nearby wildlife and attractions</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item magnetic" data-magnetic="0.05">
+                                <img src="busi.png" alt="Safari Details" class="gallery-image" />
+                                <div class="gallery-overlay">
+                                    <h4>Safari Details</h4>
+                                    <p>Detailed information about tours and guides</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item magnetic" data-magnetic="0.05">
+                                <img src="book.png" alt="Booking System" class="gallery-image" />
+                                <div class="gallery-overlay">
+                                    <h4>Booking System</h4>
+                                    <p>Easy booking and trip management</p>
+                                </div>
+                            </div>
+                            <div class="gallery-item magnetic" data-magnetic="0.05">
+                                <img src="realtime.png" alt="Animal Tracking" class="gallery-image" />
+                                <div class="gallery-overlay">
+                                    <h4>Animal Tracking</h4>
+                                    <p>Real-time wildlife location updates</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <div class="section-header">
+                    <div class="section-number"></div>
+                    <h2 class="section-title reveal-text">
+                        <span class="title-line">Let's Create Together</span>
+                    </h2>
+                </div>
+                <div class="contact-content">
+                    <div class="contact-grid">
+                        <div class="contact-info">
+                           
+                            <div class="contact-details">
+                                <div class="magnetic glass-card contact-item reveal-up" data-magnetic="0.1">
+                                    <div class="contact-icon">✉</div>
+                                    <span>roo.trails2025@gmail.com</span>
+                                </div>
+                                <div class="magnetic glass-card contact-item reveal-up" data-magnetic="0.1">
+                                    <div class="contact-icon">☎</div>
+                                    <span>+94 (555) 123-4567</span>
+                                </div>
+                                <div class="magnetic glass-card contact-item reveal-up" data-magnetic="0.1">
+                                    <div class="contact-icon">⌘</div>
+                                    <span>Available for new projects</span>
+                                </div>
+                            </div>
+                        </div>
+                        <form class="contact-form glass-card reveal-up">
+                            <div class="form-group">
+                                <input type="text" placeholder="Your Name" class="magnetic form-input"
+                                    data-magnetic="0.05" required />
+                            </div>
+                            <div class="form-group">
+                                <input type="email" placeholder="Your Email" class="magnetic form-input"
+                                    data-magnetic="0.05" required />
+                            </div>
+                            <div class="form-group">
+                                <input type="text" placeholder="Project Budget" class="magnetic form-input"
+                                    data-magnetic="0.05" />
+                            </div>
+                            <div class="form-group">
+                                <textarea placeholder="Tell us about your project" class="magnetic form-textarea"
+                                    data-magnetic="0.05" required></textarea>
+                            </div>
+                            <button type="submit" class="magnetic cta-button" data-magnetic="0.1">
+                                <span class="btn-text">Send Message</span>
+                                <span class="btn-arrow">→</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+   
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>
